@@ -12,7 +12,7 @@ Note: Currently you need to build on the nixos-unstable channel (20.03pre at the
 
 ```
 # To build, use:
-nix-build '<nixpkgs/nixos>' -I nixos-config=sd-image-aarch64-rockpro64.nix -A config.system.build.sdImage
+nix-build
 
 # When it completes the image will be in the result symlink dir:
 find result/ -iname "*.img"
