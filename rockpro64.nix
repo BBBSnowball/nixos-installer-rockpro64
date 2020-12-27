@@ -24,5 +24,6 @@ in
     # kernelPackages = linuxPackages_rock64_5_3;
     # kernelPackages = linuxPackages_rock64_4_20;
     kernelPackages = linuxPackages_rock64_4_19;
+    kernelParams = [ "console=ttyS2,115200n8" ]
   };
 }
