@@ -1,0 +1,5 @@
+.*.swp
+result
+result.*
+ssh-key.pub
+user-config.nix

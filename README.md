@@ -12,6 +12,7 @@ Note: Currently you need to build on the nixos-unstable channel (20.03pre at the
 
 ```
 # To build, use:
+# optional: ln -s ./user-config-snowball.nix user-config.nix
 nix-build
 
 # When it completes the image will be in the result symlink dir:
