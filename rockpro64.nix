@@ -26,4 +26,13 @@ in
     kernelPackages = linuxPackages_rock64_4_19;
     kernelParams = [ "console=ttyS2,115200n8" ]
   };
+
+  #services.journald.console = "ttyS2";
+
+  # https://github.com/NixOS/nixpkgs/issues/84105
+  systemd.services."serial-getty@ttyS0" = {
+    enable = true;
+    wantedBy = [ "getty.target" ]; # to start at boot
+    serviceConfig.Restart = "always"; # restart when session is closed
+  };
 }
