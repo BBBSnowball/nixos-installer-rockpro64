@@ -6,4 +6,5 @@
   networking.useDHCP = true;
   services.openssh.enable = true;
   users.users.root.openssh.authorizedKeys.keyFiles = [ ./ssh-key.pub ];
+  environment.systemPackages = with pkgs; [ tmux byobu ];
 }
