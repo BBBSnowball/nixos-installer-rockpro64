@@ -1,9 +1,13 @@
 { nixos ? import <nixpkgs/nixos>
+, nixpkgsPath ? <nixpkgs>
 , system ? builtins.currentSystem
-, config1 ? ./sd-image-aarch64-rockpro64.nix
+, config1 ? import ./sd-image-aarch64-rockpro64.nix nixpkgsPath
 , config2 ? ./user-config.nix }:
 let
-  evaluatedSystem = nixos { configuration = { imports = [ config1 ] ++ (if builtins.pathExists config2 then [ config2 ] else []); }; };
+  modules = [ config1 ] ++ (if builtins.pathExists config2 then [ config2 ] else []);
+  evaluatedSystem = if builtins.trace (builtins.functionArgs nixos) (builtins.functionArgs nixos ? modules)
+    then nixos { inherit modules system; }  # flake
+    else nixos { configuration = { imports = modules; }; inherit system; };
   sdImage1 = evaluatedSystem.config.system.build.sdImage;
   inherit (evaluatedSystem) pkgs;
   sdImage2 = pkgs.stdenv.mkDerivation {
@@ -16,7 +20,9 @@ let
       zstd -d <$src/sd-image/nixos-sd-image-*.img.zst >image
     '';
     buildPhase = ''
+      # delete first partition - not useful for RockPro64
       (echo d; echo 1; echo p; echo w) | fdisk ./image
+      # add u-boot
       dd if=${pkgs.ubootRockPro64}/idbloader.img of=image conv=fsync,notrunc bs=512 seek=64
       dd if=${pkgs.ubootRockPro64}/u-boot.itb    of=image conv=fsync,notrunc bs=512 seek=16384
     '';
