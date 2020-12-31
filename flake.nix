@@ -10,7 +10,7 @@
     packages.aarch64-linux = {
       rockpro64InstallImage = import ./default.nix { nixos = nixpkgs.lib.nixosSystem; inherit nixpkgsPath; system = "aarch64-linux"; };
       #rockpro64InstallImage = import ./default.nix { nixos = import "${nixpkgsPath}/nixos"; inherit nixpkgsPath; system = "aarch64-linux"; };
-    };
+    } // import ./kernels.nix { pkgs = nixpkgs.legacyPackages.aarch64-linux; };
     defaultPackage.aarch64-linux = self.packages.aarch64-linux.rockpro64InstallImage;
   };
 }
