@@ -14,11 +14,4 @@ in
   };
 
   #services.journald.console = "ttyS2";
-
-  # https://github.com/NixOS/nixpkgs/issues/84105
-  systemd.services."serial-getty@ttyS2" = {
-    enable = true;
-    wantedBy = [ "getty.target" ]; # to start at boot
-    serviceConfig.Restart = "always"; # restart when session is closed
-  };
 }
