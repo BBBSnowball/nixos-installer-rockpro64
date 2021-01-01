@@ -1,4 +1,4 @@
-{ lib, writeText, utillinux, stdenv, python3 }:
+{ lib, writeText, utillinux, stdenv, python3, zstd }:
 
 { config }:
 let
@@ -20,9 +20,16 @@ in stdenv.mkDerivation {
   dontPatchShebangs = true;
 
   nativeBuildInputs = [
-    python3 utillinux
+    python3 utillinux zstd
   ];
-  buildPhase = ''
+  buildPhase = if ! builtins.isNull system.config.compressResult then ''
+    runHook preBuild
+    echo ${./build-image.py} ${manifest} image
+    python3 ${./build-image.py} ${manifest} image
+    echo ${system.config.compressResult} image \>$out
+    ${system.config.compressResult} image >$out
+    runHook postBuild
+  '' else ''
     runHook preBuild
     echo ${./build-image.py} ${manifest} $out
     python3 ${./build-image.py} ${manifest} $out

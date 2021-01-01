@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 let
   partitionOptions = lib.types.submodule ({ config, ... }: {
     options = {
@@ -32,6 +32,14 @@ let
         type = lib.types.path;
         description = ''
           Source file that will be copied to partition
+        '';
+      };
+
+      sourceCompressed = lib.mkOption {
+        default = false;
+        type = lib.types.bool;
+        description = ''
+          Source file is compressed. Only zstd is supported, at the moment.
         '';
       };
 
@@ -76,6 +84,15 @@ in {
       type = lib.types.int;
       description = ''
         first logical block
+      '';
+    };
+
+    compressResult = lib.mkOption {
+      default = null;
+      type = lib.types.nullOr lib.types.str;
+      example = "${pkgs.zstd}/bin/zstd --stdout";
+      description = ''
+        program used for compressing the resulting image
       '';
     };
 
