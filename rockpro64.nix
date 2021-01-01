@@ -1,7 +1,5 @@
 { config, lib, pkgs, systems, ... }:
 let
-  kernels = import ./kernels.nix { inherit pkgs; };
-  defaultKernelVersion = "4.19";  # or 4.20 or 5.3
   baudRate = 1500000;  # 1.5 MBaud, also used by boot ROM and u-boot
 in
 {
@@ -10,7 +8,7 @@ in
       grub.enable = false;
       generic-extlinux-compatible.enable = true;
     };
-    kernelPackages = lib.mkDefault kernels.linuxPackages_rock64.${defaultKernelVersion};
+    kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
     kernelParams = [ "console=ttyS2,${toString baudRate}n8" ];
   };
 
